@@ -7,18 +7,118 @@
 //
 
 #import "AppDelegate.h"
+#import "Firstview.h"
 
+#import "ThirdViewController.h"
+
+#import "NewTableViewController.h"
+#import "FavTableViewController.h"
+#import "CreateTableViewController.h"
+#import "addRecipeViewController.h"
 @implementation AppDelegate
-
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize managedObjectModel = _managedObjectModel;
-@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize nav1,nav2,nav3,nav4,thirdVC,newTableVC,favTableVC,firstVC,nav5,arVC;
+@synthesize managedObjectContext;// = managedObjectContext;
+@synthesize managedObjectModel = managedObjectModel;
+@synthesize persistentStoreCoordinator = persistentStoreCoordinator;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    Firstview *rootView = [[Firstview alloc]
+                           initWithNibName:@"Firstview"
+                           bundle:nil];
+    self.navController = [[UINavigationController alloc] initWithRootViewController:rootView];
+    [self.window setRootViewController:self.navController];
+    //template code
     self.window.backgroundColor = [UIColor whiteColor];
+    
+    
+    
+    Firstview  *aViewController = [[Firstview alloc] initWithNibName:@"Firstview" bundle:nil];
+    self.firstVC = aViewController;
+    [aViewController release];
+    
+    
+    
+    
+    ThirdViewController *thirdView = [[ThirdViewController alloc] initWithNibName:@"ThirdViewController" bundle:nil];
+    self.thirdVC = thirdView;
+    [thirdView release];
+    
+    
+    
+    NewTableViewController *fourthView1 = [[NewTableViewController alloc] initWithNibName:@"NewTableViewController" bundle:nil];
+    self.newTableVC = fourthView1;
+    [fourthView1 release];
+    
+    FavTableViewController *favView = [[FavTableViewController alloc] initWithNibName:@"FavTableViewController" bundle:nil];
+    self.favTableVC = favView;
+    [favView release];
+    
+    addRecipeViewController *addView = [[addRecipeViewController alloc] initWithNibName:@"addRecipeViewController" bundle:nil];
+    self.arVC = addView;
+    [addView release];
+    
+    
+    
+    UINavigationController *navigation5 = [[UINavigationController alloc] initWithRootViewController:firstVC];
+    self.nav5 = navigation5;
+    [navigation5 release];
+    
+    
+    
+    UINavigationController *navigation1 = [[UINavigationController alloc] initWithRootViewController:newTableVC];
+    self.nav1 = navigation1;
+    [navigation1 release];
+    
+    
+    
+    
+   // UINavigationController *navigation2 = [[UINavigationController alloc] initWithRootViewController:favTableVC];
+   // self.nav2 = navigation2;
+   // [navigation2 release];
+    
+    UINavigationController *navigation2 = [[UINavigationController alloc] initWithRootViewController:thirdVC];
+    self.nav2 = navigation2;
+    [navigation2 release];
+    
+    //UINavigationController *navigation4 = [[UINavigationController alloc] initWithRootViewController:fourthVC];
+    UINavigationController *navigation3 = [[UINavigationController alloc] initWithRootViewController:arVC];
+    self.nav3 = navigation3;
+    [navigation3 release];
+    
+    UITabBarController *tabbar = [[UITabBarController alloc] initWithNibName:@"UITabBarController" bundle:nil];
+    self.tabController = tabbar;
+    [tabbar release];
+    
+    NSArray *viewControllersArray = [[NSArray alloc] initWithObjects:nav5, nav1,nav2, nav3, nav4, nil];
+    //!! End Changes
+    
+    
+    self.tabController.viewControllers = viewControllersArray;
+    
+    //UITabBarItem *itm1 = [[UITabBarItem alloc] init
+    
+    //UITabBarItem *itm1 = self.tabController.tabBar;
+    
+    //[itm1 setTitle:@"ABC"];
+    
+    
+    
+    
+    //  self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemMore tag:3];
+    
+    //  [self.tabController setViewControllers:viewControllersArray animated:YES];
+    self.arVC.managedObjectContext = self.managedObjectContext;
+    
+    self.window.rootViewController = self.tabController;
+   
+    
+    
+    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"3.png"]];
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -54,7 +154,7 @@
 - (void)saveContext
 {
     NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    managedObjectContext = self.managedObjectContext;
     if (managedObjectContext != nil) {
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
              // Replace this implementation with code to handle the error appropriately.
@@ -69,45 +169,45 @@
 
 // Returns the managed object context for the application.
 // If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
-- (NSManagedObjectContext *)managedObjectContext
+- (NSManagedObjectContext *) managedObjectContext
 {
-    if (_managedObjectContext != nil) {
-        return _managedObjectContext;
+    if (managedObjectContext != nil) {
+        return managedObjectContext;
     }
     
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (coordinator != nil) {
-        _managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+        managedObjectContext = [[NSManagedObjectContext alloc] init];
+        [managedObjectContext setPersistentStoreCoordinator:coordinator];
     }
-    return _managedObjectContext;
+    return managedObjectContext;
 }
 
 // Returns the managed object model for the application.
 // If the model doesn't already exist, it is created from the application's model.
 - (NSManagedObjectModel *)managedObjectModel
 {
-    if (_managedObjectModel != nil) {
-        return _managedObjectModel;
+    if (managedObjectModel != nil) {
+        return managedObjectModel;
     }
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"RecipeApp" withExtension:@"momd"];
-    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    return _managedObjectModel;
+    managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    return managedObjectModel;
 }
 
 // Returns the persistent store coordinator for the application.
 // If the coordinator doesn't already exist, it is created and the application's store added to it.
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
 {
-    if (_persistentStoreCoordinator != nil) {
-        return _persistentStoreCoordinator;
+    if (persistentStoreCoordinator != nil) {
+        return persistentStoreCoordinator;
     }
     
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"RecipeApp.sqlite"];
     
     NSError *error = nil;
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+    persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
         /*
          Replace this implementation with code to handle the error appropriately.
          
@@ -135,7 +235,7 @@
         abort();
     }    
     
-    return _persistentStoreCoordinator;
+    return persistentStoreCoordinator;
 }
 
 #pragma mark - Application's Documents directory
@@ -145,5 +245,25 @@
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
+-(void)dealloc
+{
+    [managedObjectContext release];
+    [managedObjectModel release];
+    [persistentStoreCoordinator release];
+    [firstVC release];
+    
+    [thirdVC release];
+    
+    [nav4 release];
+    [nav3 release];
+    [nav1 release];
+    [nav2 release];
+    [nav5 release];
+    [arVC release];
+    [newTableVC release];
+    [favTableVC release];
+    [super dealloc];
+}
+
 
 @end
